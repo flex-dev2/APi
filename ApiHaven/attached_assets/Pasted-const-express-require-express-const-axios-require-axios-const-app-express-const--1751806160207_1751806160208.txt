@@ -1,0 +1,55 @@
+const express = require('express');
+const axios = require('axios');
+const app = express();
+const PORT = 3000;
+
+
+app.use(express.json());
+
+
+app.get('/download/YouTube', async (req, res) => {
+    try {
+        const videoUrl = req.query.url;
+        
+        if (!videoUrl) {
+            return res.status(400).json({ 
+        creator:'Flex-dev',
+                
+                message: 'please put a youtube link' });
+        }
+
+        const response = await axios.post(
+            'https://www.clipto.com/api/youtube',
+            { url: videoUrl },
+            {
+                headers: {
+                    'accept-language': 'en-US,en;q=0.9',
+                    'origin': 'https://www.clipto.com',
+                    'priority': 'u=1, i',
+                    'referer': 'https://www.clipto.com/ar/media-downloader/youtube-downloader',
+                    'sec-ch-ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
+                    'sec-ch-ua-mobile': '?0',
+                    'sec-ch-ua-platform': '"Windows"',
+                    'sec-fetch-dest': 'empty',
+                    'sec-fetch-mode': 'cors',
+                    'sec-fetch-site': 'same-origin',
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+                    'cookie': 'NEXT_LOCALE=ar; uu=0a21ad6062a24a7f8404a39d47ed09bd; bucket=67; stripe-checkout=default; country=EG; ip=197.38.82.103; mac-download=default; show-mac-download-new-interface=default_second; _ga=GA1.1.793163608.1749281318; _gcl_au=1.1.823847378.1749281318; _clck=1ily4gt|2|fwk|0|1984; _uetsid=07c19b00437111f09c46b337ba3dae1e; _uetvid=07c1ac80437111f08293b30d16b943fd; _clsk=1eg416m|1749281353861|2|0|k.clarity.ms/collect; _ga_ZVDHSR45N6=GS2.1.s1749281318$o1$g1$t1749281361$j17$l0$h0; XSRF-TOKEN=oYxxJINt-8DG9N12SP6MFS3KVH1ADSVWGs9w'
+                }
+            }
+        );
+
+        res.json({
+            creator:'flex-dev',
+        
+            data : response.data} );
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'حدث خطأ أثناء معالجة طلبك' });
+    }
+});
+
+
+app.listen(PORT, () => {
+    console.log('weeeeeeeee');
+});
