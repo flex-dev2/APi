@@ -1,0 +1,59 @@
+const axios = require('axios');
+const FormData = require('form-data');
+const express = require('express');
+const PORT =3000
+const app = express()
+app.get('/Ai/DeepAi', async (req,res) => {
+    try {
+        const text = req.query.text;
+        if(!text) return res.json({
+            creator:'Flex-Dev',
+            Message:'please put text'
+        });
+
+        const form = new FormData();
+        form.append('chat_style', 'chat');
+        form.append('chatHistory', JSON.stringify([{"role":"user","content":text}])); // هنا التصحيح المهم
+        form.append('model', 'standard');
+        form.append('hacker_is_stinky', 'very_stinky');
+        
+        const response = await axios.post(
+            'https://api.deepai.org/hacking_is_a_serious_crime',
+            form,
+            {
+                headers: {
+                    ...form.getHeaders(),
+                    'accept': '*/*',
+                    'accept-language': 'en-US,en;q=0.9',
+                    'api-key': 'tryit-80552042560-461efd5259bbb030bd9343f0dd123401',
+                    'content-type': 'multipart/form-data; boundary=----WebKitFormBoundaryRYxH0WnydVUqogh2',
+                    'origin': 'https://deepai.org',
+                    'priority': 'u=1, i',
+                    'sec-ch-ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
+                    'sec-ch-ua-mobile': '?0',
+                    'sec-ch-ua-platform': '"Windows"',
+                    'sec-fetch-dest': 'empty',
+                    'sec-fetch-mode': 'cors',
+                    'sec-fetch-site': 'same-site',
+                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+                    'cookie': '_ga=GA1.1.1937318586.1750273454; _gcl_au=1.1.1038361054.1750273454; _cc_id=e662c67c11d40cf88eb32608f4016739; panoramaId_expiry=1750878256498; panoramaId=c75bfb4e62bd27ccd44109157c66185ca02cd7a052f717eb66b1741d0ad97685; panoramaIdType=panoDevice; user_sees_ads=true; _gcl_aw=GCL.1750346512.CjwKCAjw6s7CBhACEiwAuHQcksx-u1gX-32HUwKf6ywKRKQY5x3rn0VDF9RE9MHt5Ym2JueUyfoHkRoCWRMQAvD_BwE; _gcl_gs=2.1.k1$i1750346510$u191244351; _ga_GY2GHX2J9Y=GS2.1.s1750346511$o3$g0$t1750346511$j60$l0$h0; cto_bundle=XVwOyl9IVkIyeHRKNlhFNnRoQ2xiZDZ4aSUyQmxvM1FXUDRjTE1zaWZ5U1ZZUE5vNXlDR2dweDJWSUtqTTVHMDQyNEQ5N0hTbURheDBUTDRWT2hjcHp2N1BpejBFNXZNd0VOVlBqWWFpUjA3UjI5WWxYaEZnejJ6M3V4eUFpZng4YlU1VldRV2lYZUs5ZXFLZ084cFdFamJkeEFhZyUzRCUzRA; __gads=ID=fc771c25e8946627:T=1750273457:RT=1750346517:S=ALNI_MYwgWzimUWyPHp9NKH5eRt1QBCjvA; __gpi=UID=00001143babc0af7:T=1750273457:RT=1750346517:S=ALNI_Ma0UN7MwDdJ4E9vGhm3ut2WkhOGjg; __eoi=ID=4124101e177f81be:T=1750273457:RT=1750346517:S=AA-AfjbFEaXXWpEcAkJ9mNRm59CT'
+                }
+            }
+        );
+
+        res.json({
+            creator:'Flex-Dev',
+            Message:response.data
+        });
+    } catch (error) {
+        console.error(error); // لإظهار الخطأ في سطر الأوامر
+        res.status(500).json({ 
+            creator: 'Flex-Dev',
+            error: 'حدث خطأ أثناء معالجة طلبك',
+            details: error.message 
+        });
+    }
+});
+app.listen(PORT, () => {
+    console.log('weeeeeeeee');
+});

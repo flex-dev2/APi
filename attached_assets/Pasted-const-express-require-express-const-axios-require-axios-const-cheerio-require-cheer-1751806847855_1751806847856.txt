@@ -1,0 +1,97 @@
+const express = require('express');
+const axios = require('axios');
+const cheerio = require('cheerio')
+const PORT =3000
+const app = express();
+app.use(express.json());
+
+app.get('/download/tiktok',async(req,res)=>{
+try {
+
+const url = req.query.url;
+if(!url) {
+res.json({
+creator:'Flex-Dev',
+Message:'Please put Url'
+
+
+})
+
+
+}
+const response = await axios.post(
+  'https://ssstik.io/abc',
+  new URLSearchParams({
+    'id': url,
+    'locale': 'en',
+    'tt': 'UlQ0aFI4'
+  }),
+  {
+    params: {
+      'url': 'dl'
+    },
+    headers: {
+      'accept': '*/*',
+      'accept-language': 'en-US,en;q=0.9',
+      'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'hx-current-url': 'https://ssstik.io/',
+      'hx-request': 'true',
+      'hx-target': 'target',
+      'hx-trigger': '_gcaptcha_pt',
+      'origin': 'https://ssstik.io',
+      'priority': 'u=1, i',
+      'referer': 'https://ssstik.io/',
+      'sec-ch-ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'same-origin',
+      'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+      'cookie': '_ga=GA1.1.1766371795.1750420188; __gads=ID=1f07b9c002de6544:T=1750420187:RT=1750420187:S=ALNI_MYkdR77OvUZKYLARaigOhQUl5Jqjg; __gpi=UID=0000114764b78828:T=1750420187:RT=1750420187:S=ALNI_MbX5yDUqJws8FYMPlMfFq8GV1a7Cw; __eoi=ID=cc16580221cdb969:T=1750420187:RT=1750420187:S=AA-Afjbuutb43eiyfZlkwDSTDZOa; FCNEC=%5B%5B%22AKsRol_1kEJyq8sJ858uqcZch4DsP0JryroTDyuyhAVmmS9ZN3_RKdudaBhJiAzYKTusrmvqejjzoGrCw7E0hRHZjl8qewa_rjzR0-6_yzxcJqC7Zh1f-5Th1lEGYmLr50DhzadEULQmcxbMM7EDbq9Bpi0nKsa2pA%3D%3D%22%5D%5D; _ga_ZSF3D6YSLC=GS2.1.s1750420187$o1$g0$t1750420211$j36$l0$h0'
+    }
+  }
+);
+const $ = cheerio.load(response.data);
+
+
+const downloadLinks = {
+    withoutWatermark: $('a.download_link.without_watermark').attr('href'),
+    withoutWatermarkHD: $('a.download_link.without_watermark_hd').attr('href'),
+    mp3: $('a.download_link.music').attr('href'),
+    author: {
+        name: $('h2').text(),
+        avatar: $('img.result_author').attr('src')
+    },
+    stats: {
+        likes: $('#trending-actions > div:nth-child(1) > div:nth-child(2)').text().trim(),
+        comments: $('#trending-actions > div:nth-child(2) > div:nth-child(2)').text().trim(),
+        shares: $('#trending-actions > div:nth-child(3) > div:nth-child(2)').text().trim()
+    }
+};
+res.json({
+creator:'Flex-Dev',
+Result:downloadLinks
+
+
+})
+} catch (error) {
+    res.json({
+creator:'Flex-dev',
+Message:error
+
+
+    })
+    console.log(error)
+}
+
+
+
+
+
+})
+app.listen(PORT,()=>{
+
+console.log('Succsesful')
+
+})
